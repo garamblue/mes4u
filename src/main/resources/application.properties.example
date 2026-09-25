@@ -1,0 +1,27 @@
+# Copy this file to 'application.properties' (same directory) and edit the values.
+# 'application.properties' is ignored by git, so each developer keeps their own copy.
+
+spring.datasource.hikari.maximum-pool-size=4
+spring.datasource.url=jdbc:postgresql://localhost:5432/nsmes
+spring.datasource.username=your_db_user
+spring.datasource.password=your_db_password
+
+spring.datasource.tomcat.max-wait=10000
+spring.datasource.tomcat.max-active=20
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation= true
+spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.open-in-view=false
+
+# Hibernate ddl auto (create, create-drop, validate, update)
+spring.jpa.hibernate.ddl-auto= update
+spring.data.jdbc.repositories.enabled=false
+
+mybatis.mapper-locations=com/sindoh/sdmes/mapper/*.xml
+
+# Project Custom Values
+# DB name passed to the report (label printing) procedure: same DB name as in the URL above
+sdmes.datasource.db=nsmes
+# JWT signing secret: use a long random string
+sdmes.app.jwtSecret=change-this-to-a-long-random-string
+sdmes.app.jwtExpirationMs=86400000

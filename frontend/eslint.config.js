@@ -1,0 +1,106 @@
+import js from '@eslint/js'
+import globals from 'globals'
+import pluginVue from 'eslint-plugin-vue'
+
+export default [
+  { ignores: ['src/assets/**', 'src/plugins/**', 'src/vendor/**'] },
+  js.configs.recommended,
+  ...pluginVue.configs['flat/recommended'],
+  {
+    files: ['**/*.{js,vue}'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
+    // add your custom rules here
+    rules: {
+      'vue/max-attributes-per-line': ['error', {
+        singleline: { max: 10 },
+        multiline: { max: 1 }
+      }],
+      'vue/singleline-html-element-content-newline': 'off',
+      'vue/multiline-html-element-content-newline': 'off',
+      'vue/component-definition-name-casing': ['error', 'PascalCase'],
+      'vue/multi-word-component-names': 'off',
+      'vue/no-v-html': 'off',
+      'accessor-pairs': 'error',
+      'arrow-spacing': ['error', { before: true, after: true }],
+      'block-spacing': ['error', 'always'],
+      'brace-style': ['error', '1tbs', { allowSingleLine: true }],
+      'comma-dangle': ['error', 'never'],
+      'comma-spacing': ['error', { before: false, after: true }],
+      'comma-style': ['error', 'last'],
+      'constructor-super': 'error',
+      'curly': ['error', 'multi-line'],
+      'dot-location': ['error', 'property'],
+      'eol-last': 'error',
+      'eqeqeq': ['error', 'always', { null: 'ignore' }],
+      'generator-star-spacing': ['error', { before: true, after: true }],
+      'indent': ['error', 2, { SwitchCase: 1 }],
+      'key-spacing': ['error', { beforeColon: false, afterColon: true }],
+      'keyword-spacing': ['error', { before: true, after: true }],
+      'new-cap': ['error', { newIsCap: true, capIsNew: false }],
+      'new-parens': 'error',
+      'no-array-constructor': 'error',
+      'no-caller': 'error',
+      'no-console': 'off',
+      'no-control-regex': 'off',
+      'no-eval': 'error',
+      'no-extend-native': 'error',
+      'no-extra-bind': 'error',
+      'no-extra-parens': ['error', 'functions'],
+      'no-floating-decimal': 'error',
+      'no-implied-eval': 'error',
+      'no-iterator': 'error',
+      'no-labels': ['error', { allowLoop: false, allowSwitch: false }],
+      'no-lone-blocks': 'error',
+      'no-multi-spaces': 'error',
+      'no-multi-str': 'error',
+      'no-multiple-empty-lines': ['error', { max: 1 }],
+      'no-new-wrappers': 'error',
+      'no-octal-escape': 'error',
+      'no-proto': 'error',
+      'no-return-assign': ['error', 'except-parens'],
+      'no-self-compare': 'error',
+      'no-sequences': 'error',
+      'no-throw-literal': 'error',
+      'no-trailing-spaces': 'error',
+      'no-undef-init': 'error',
+      'no-unmodified-loop-condition': 'error',
+      'no-unneeded-ternary': ['error', { defaultAssignment: false }],
+      'no-unused-vars': ['error', { vars: 'all', args: 'none', caughtErrors: 'none' }],
+      'no-prototype-builtins': 'off',
+      'no-useless-call': 'error',
+      'no-useless-computed-key': 'error',
+      'no-useless-constructor': 'error',
+      'no-useless-escape': 'off',
+      'no-whitespace-before-property': 'error',
+      'one-var': ['error', { initialized: 'never' }],
+      'operator-linebreak': ['error', 'after', { overrides: { '?': 'before', ':': 'before' }}],
+      'padded-blocks': ['error', 'never'],
+      'quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+      'semi': ['error', 'never'],
+      'semi-spacing': ['error', { before: false, after: true }],
+      'space-before-blocks': ['error', 'always'],
+      'space-before-function-paren': ['error', 'never'],
+      'space-in-parens': ['error', 'never'],
+      'space-infix-ops': 'error',
+      'space-unary-ops': ['error', { words: true, nonwords: false }],
+      'spaced-comment': ['error', 'always', {
+        markers: ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
+      }],
+      'template-curly-spacing': ['error', 'never'],
+      'wrap-iife': ['error', 'any'],
+      'yield-star-spacing': ['error', 'both'],
+      'yoda': ['error', 'never'],
+      'prefer-const': 'error',
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+      'object-curly-spacing': ['error', 'always', { objectsInObjects: false }],
+      'array-bracket-spacing': ['error', 'never']
+    }
+  }
+]
