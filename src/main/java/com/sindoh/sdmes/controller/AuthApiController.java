@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sindoh.sdmes.model.Roles;
 import com.sindoh.sdmes.security.payload.LoginRequest;
 import com.sindoh.sdmes.security.payload.RegisterRequest;
+import com.sindoh.sdmes.security.service.UserDetailsImpl;
 import com.sindoh.sdmes.service.AuthService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -40,8 +44,31 @@ public class AuthApiController {
 	}
 	
 	@PostMapping("/update")
-	public ResponseEntity<?> updateUser(@Valid @RequestBody RegisterRequest registerRequest) {
+	public ResponseEntity<?> updateUser(@Valid @RequestBody RegisterRequest registerRequest, Authentication authentication) {
+		// Only an administrator can modify other users' accounts. A user can modify his own account.
+		if (!isAdmin(authentication) && !isSelf(authentication, registerRequest.getId())) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error: Forbidden");
+		}
 		return authService.updateUser(registerRequest);
+	}
+
+	private boolean isAdmin(Authentication authentication) {
+		if (authentication == null) {
+			return false;
+		}
+		for (GrantedAuthority authority : authentication.getAuthorities()) {
+			if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isSelf(Authentication authentication, Long userId) {
+		return authentication != null
+				&& authentication.getPrincipal() instanceof UserDetailsImpl
+				&& userId != null
+				&& userId.equals(((UserDetailsImpl) authentication.getPrincipal()).getId());
 	}
 	
 	@GetMapping("/users")

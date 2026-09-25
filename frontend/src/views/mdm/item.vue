@@ -92,7 +92,8 @@
             </el-form-item>
           </el-col>
           <el-col :lg="4" :md="4">
-            <el-form-item label-width="0" prop="id">
+            <el-form-item label-width="0" prop="id" class="required-without-label">
+              <span class="required-mark">*</span>
               <el-input v-model="itemSet.id" placeholder="Item Id" :readonly="(dialogStatus!=='create')" />
             </el-form-item>
           </el-col>
@@ -454,8 +455,12 @@ export default {
       labelList: null,
       selectedLabelType: '',
       rules: {
-        itemnumber: [{ required: true, message: 'item number is required', trigger: 'change' }],
-        id: [{ validator: validateInteger('Item Id must be a number'), trigger: ['blur', 'change'] }],
+        itemnumber: [{ required: true, whitespace: true, message: 'item number is required', trigger: 'change' }],
+        id: [
+          { required: true, message: 'item id is required', trigger: 'change' },
+          { validator: validateInteger('Item Id must be a number'), trigger: ['blur', 'change'] }
+        ],
+        productfamily: [{ required: true, whitespace: true, message: 'product family is required', trigger: 'change' }],
         serialruleid: [{ validator: validateInteger('Serial Rule Id must be a number'), trigger: ['blur', 'change'] }]
       },
       packingrules: {
@@ -915,3 +920,16 @@ export default {
 
 </script>
 
+<style scoped>
+/* red asterisk for a required field that has no label (Item Id) */
+.required-without-label :deep(.el-form-item__content) {
+  padding-left: 12px;
+}
+.required-without-label .required-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 32px;
+  color: var(--el-color-danger);
+}
+</style>

@@ -23,15 +23,18 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.module.scss'
+import { hasRoleAccess } from '@/utils/role'
 
 export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
+      'role'
     ]),
     routes() {
-      return this.$router.options.routes
+      // hide the menus the current role is not allowed to see (meta.roles)
+      return this.$router.options.routes.filter(route => hasRoleAccess(this.role, route.meta))
     },
     activeMenu() {
       const route = this.$route

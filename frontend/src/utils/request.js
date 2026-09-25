@@ -14,7 +14,8 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     if (getToken()) {
-      config.headers['X-Token'] = getToken()
+      // the server (AuthTokenFilter) reads the JWT from the 'Authorization: Bearer' header
+      config.headers['Authorization'] = 'Bearer ' + getToken()
     }
     return config
   },
@@ -33,8 +34,14 @@ service.interceptors.response.use(
   },
   error => {
     // console.log(error.response) // for debug
+    const response = error.response || {}
+    const data = response.data
+    let message = typeof data === 'string' ? data : (data && (data.message || data.error)) || error.message
+    if (response.status === 403) {
+      message = 'You do not have permission to perform this action.'
+    }
     ElMessage({
-      message: error.response.data,
+      message,
       type: 'error',
       duration: 5 * 1000
     })

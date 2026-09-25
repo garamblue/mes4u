@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 import { writeLog } from '@/utils/log'
+import { hasRoleAccess } from '@/utils/role'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -26,6 +27,11 @@ router.beforeEach(async(to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
+      next({ path: '/' })
+      NProgress.done()
+    } else if (!hasRoleAccess(store.getters.role, to.meta)) {
+      // the page is restricted to other roles (meta.roles)
+      ElMessage.warning('You do not have permission to access this page.')
       next({ path: '/' })
       NProgress.done()
     } else {

@@ -180,7 +180,7 @@ export const constantRoutes = [
     path: '/system/',
     component: Layout,
     name: 'system',
-    meta: { title: 'Admin', icon: 'setting' },
+    meta: { title: 'Admin', icon: 'setting', roles: ['ROLE_ADMIN'] }, // only ROLE_ADMIN can see this menu and its pages
     children: [
       {
         path: 'program',

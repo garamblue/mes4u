@@ -462,9 +462,9 @@ export default {
           }
         } else {
           this.$message({
-            message: 'No data found.',
+            message: 'Item ' + this.routingform.item + ' does not exist in Item Master. Please register it in Master Data > Items first.',
             type: 'error',
-            duration: 2000
+            duration: 5000
           })
         }
       } else {

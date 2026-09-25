@@ -3,6 +3,7 @@ package com.sindoh.sdmes.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -55,7 +56,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable()
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.authorizeRequests().antMatchers("/api/**").permitAll()
+			.authorizeRequests()
+			// Screens of the 'Admin' menu (External System, Printing Info, Log, Register User): ROLE_ADMIN only
+			.mvcMatchers("/api/auth/register", "/api/auth/users", "/api/auth/roles").hasRole("ADMIN")
+			.mvcMatchers(HttpMethod.POST, "/api/system/mesSystems", "/api/system/mesPrintingPrograms").hasRole("ADMIN")
+			.mvcMatchers(HttpMethod.PUT, "/api/system/mesSystems", "/api/system/mesPrintingPrograms").hasRole("ADMIN")
+			.mvcMatchers(HttpMethod.DELETE, "/api/system/mesSystems/**", "/api/system/mesPrintingPrograms/**").hasRole("ADMIN")
+			.mvcMatchers(HttpMethod.GET, "/api/system/mesPrintingPrograms", "/api/system/readLog/**").hasRole("ADMIN")
+			// modifying a user requires a login (the controller allows an administrator or the user himself)
+			.mvcMatchers("/api/auth/update").authenticated()
+			.antMatchers("/api/**").permitAll()
 			.antMatchers("/","/error","/js/**","/css/**","/fonts/**","/img/**").permitAll()
 			.antMatchers("/favicon.ico").permitAll()
 			.anyRequest().authenticated();
